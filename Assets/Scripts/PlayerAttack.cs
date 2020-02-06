@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+    [SerializeField] GameObject playerIcon;
+
     public Bullet defaultBullet;
     public Bullet[] bullets;
     public Bullet currentBullet;
-    public int currentAmmo { get; set;} = 0;
+    public int currentAmmo { get; set; } = 0;
     int playerIndex;
     float lastFire = 0;
     bool axesPress = false;
@@ -16,12 +18,15 @@ public class PlayerAttack : MonoBehaviour
     PlayerStats playerStats;
 
 
+
+
     private void Awake()
     {
         playerStats = GetComponent<PlayerStats>();
         playerAudio = GetComponent<PlayerAudio>();
         rigidbody = GetComponent<Rigidbody>();
         playerIndex = GetComponent<PlayerStats>().playerIndex;
+
         currentAmmo = currentBullet.startAmmo;
     }
 
@@ -78,6 +83,7 @@ public class PlayerAttack : MonoBehaviour
                 }*/
                 if (currentAmmo > 0 && (Input.GetAxis("FireP" + playerIndex)>0))
                 {
+                    StartCoroutine(EnableIcon());
                     Bullet bullet = Instantiate(currentBullet.gameObject, transform.position + transform.forward + transform.up, transform.rotation).GetComponent<Bullet>();
                     bullet.owner = GetComponent<PlayerStats>();
                     
@@ -97,6 +103,7 @@ public class PlayerAttack : MonoBehaviour
             {
                 if (((currentAmmo > 0 || currentBullet.type == Bullet.Type.Default) && Input.GetAxis("FireP" + playerIndex) > 0) && !axesPress)
                 {
+                    StartCoroutine(EnableIcon());
                     axesPress = true;
                     if (currentBullet.type == Bullet.Type.Default || currentBullet.type == Bullet.Type.Sniper)
                     {
@@ -142,5 +149,13 @@ public class PlayerAttack : MonoBehaviour
         {
             axesPress = false;
         }
+    }
+
+    IEnumerator EnableIcon()
+    {
+        Color newColor = playerIcon.GetComponent<SpriteRenderer>().color;
+        newColor.a = 1;
+        playerIcon.GetComponent<SpriteRenderer>().color = newColor;
+        yield return new WaitForSeconds(1f);
     }
 }

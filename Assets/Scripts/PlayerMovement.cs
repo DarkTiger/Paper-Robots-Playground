@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpForce;
     [SerializeField] float movementSpeed;
     [SerializeField] float rotationSpeed;
+    [SerializeField] GameObject playerIcon;
 
     PlayerAttack playerAttack;
     PlayerStats playerStat;
@@ -56,6 +57,19 @@ public class PlayerMovement : MonoBehaviour
             rigidBody.AddTorque(transform.up * horizontalMovement * rotationSpeed, ForceMode.VelocityChange);
             rigidBody.AddForce(transform.forward * verticalMovement * movementSpeed, ForceMode.Impulse);
             rigidBody.AddForce(-transform.right * strifeMovement * (movementSpeed / 2), ForceMode.Impulse);
+
+            if (horizontalMovement != 0 || verticalMovement != 0 || strifeMovement != 0)
+            {
+                StartCoroutine(EnableIconMov());
+            }
+            else
+            {
+                StartCoroutine(DisableIcon());
+            }
+            if (Input.GetAxis("JumpP" + playerIndex) > 0)
+            {
+                StartCoroutine(EnableIconJump());
+            }
         }
     }
 
@@ -144,6 +158,38 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetAxis("JumpP" + playerIndex) == 0)
         {
             axesPress = false;
+        }
+    }
+
+    IEnumerator EnableIconMov()
+    {
+        yield return new WaitForSeconds(0.2f);
+        while (playerIcon.GetComponent<SpriteRenderer>().color.a<1)
+        {
+            Color newColor = playerIcon.GetComponent<SpriteRenderer>().color;
+            newColor.a += 0.8f * Time.deltaTime;
+            playerIcon.GetComponent<SpriteRenderer>().color = newColor;
+            yield return null;
+        }
+        
+    }
+    IEnumerator EnableIconJump()
+    {
+        Color newColor = playerIcon.GetComponent<SpriteRenderer>().color;
+        newColor.a = 1;
+        playerIcon.GetComponent<SpriteRenderer>().color = newColor;
+        yield return new WaitForSeconds(1f);
+    }
+
+    IEnumerator DisableIcon()
+    {
+        yield return new WaitForSeconds(1.0f);
+        while (playerIcon.GetComponent<SpriteRenderer>().color.a > 0)
+        {
+            Color newColor = playerIcon.GetComponent<SpriteRenderer>().color;
+            newColor.a -= 0.5f * Time.deltaTime;
+            playerIcon.GetComponent<SpriteRenderer>().color = newColor;
+            yield return null;
         }
     }
 }
