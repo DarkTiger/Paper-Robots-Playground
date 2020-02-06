@@ -83,7 +83,7 @@ public class PlayerAttack : MonoBehaviour
                 }*/
                 if (currentAmmo > 0 && (Input.GetAxis("FireP" + playerIndex)>0))
                 {
-                    StartCoroutine(EnableIcon());
+                    EnableIcon();
                     Bullet bullet = Instantiate(currentBullet.gameObject, transform.position + transform.forward + transform.up, transform.rotation).GetComponent<Bullet>();
                     bullet.owner = GetComponent<PlayerStats>();
                     
@@ -103,7 +103,7 @@ public class PlayerAttack : MonoBehaviour
             {
                 if (((currentAmmo > 0 || currentBullet.type == Bullet.Type.Default) && Input.GetAxis("FireP" + playerIndex) > 0) && !axesPress)
                 {
-                    StartCoroutine(EnableIcon());
+                    EnableIcon();
                     axesPress = true;
                     if (currentBullet.type == Bullet.Type.Default || currentBullet.type == Bullet.Type.Sniper)
                     {
@@ -151,11 +151,10 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    IEnumerator EnableIcon()
+        void EnableIcon()
     {
         Color newColor = playerIcon.GetComponent<SpriteRenderer>().color;
         newColor.a = 1;
         playerIcon.GetComponent<SpriteRenderer>().color = newColor;
-        yield return new WaitForSeconds(1f);
     }
 }

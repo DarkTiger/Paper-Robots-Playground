@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpForce;
     [SerializeField] float movementSpeed;
     [SerializeField] float rotationSpeed;
-    [SerializeField] GameObject playerIcon;
+    [SerializeField] SpriteRenderer playerIcon;
 
     PlayerAttack playerAttack;
     PlayerStats playerStat;
@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isGrouded;
     bool axesPress = false;
+    bool notCoroutineIcon = true;
 
 
     Vector3 direction = new Vector3(0, 0, 0);
@@ -58,17 +59,21 @@ public class PlayerMovement : MonoBehaviour
             rigidBody.AddForce(transform.forward * verticalMovement * movementSpeed, ForceMode.Impulse);
             rigidBody.AddForce(-transform.right * strifeMovement * (movementSpeed / 2), ForceMode.Impulse);
 
-            if (horizontalMovement != 0 || verticalMovement != 0 || strifeMovement != 0)
+            if (notCoroutineIcon)
             {
-                StartCoroutine(EnableIconMov());
-            }
-            else
-            {
-                StartCoroutine(DisableIcon());
+                if (horizontalMovement != 0 || verticalMovement != 0 || strifeMovement != 0)
+                {
+                    StartCoroutine(EnableIconMov());
+                }
+                else
+                {
+                    StartCoroutine(DisableIcon());
+                }
+                
             }
             if (Input.GetAxis("JumpP" + playerIndex) > 0)
             {
-                StartCoroutine(EnableIconJump());
+                EnableIconJump();
             }
         }
     }
@@ -163,33 +168,35 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator EnableIconMov()
     {
-        yield return new WaitForSeconds(0.2f);
-        while (playerIcon.GetComponent<SpriteRenderer>().color.a<1)
+        notCoroutineIcon = false;
+        yield return new WaitForSeconds(0.5f);
+        while (playerIcon.color.a<1)
         {
             Color newColor = playerIcon.GetComponent<SpriteRenderer>().color;
-            newColor.a += 0.8f * Time.deltaTime;
-            playerIcon.GetComponent<SpriteRenderer>().color = newColor;
+            newColor.a += 0.5f * Time.deltaTime;
+            playerIcon.color = newColor;
             yield return null;
         }
-        
+        notCoroutineIcon = true;
     }
-    IEnumerator EnableIconJump()
+    void EnableIconJump()
     {
-        Color newColor = playerIcon.GetComponent<SpriteRenderer>().color;
+        Color newColor = playerIcon.color;
         newColor.a = 1;
-        playerIcon.GetComponent<SpriteRenderer>().color = newColor;
-        yield return new WaitForSeconds(1f);
+        playerIcon.color = newColor;
     }
 
     IEnumerator DisableIcon()
     {
-        yield return new WaitForSeconds(1.0f);
-        while (playerIcon.GetComponent<SpriteRenderer>().color.a > 0)
+        notCoroutineIcon = false;
+        yield return new WaitForSeconds(0.2f);
+        while (playerIcon.color.a > 0)
         {
-            Color newColor = playerIcon.GetComponent<SpriteRenderer>().color;
-            newColor.a -= 0.5f * Time.deltaTime;
-            playerIcon.GetComponent<SpriteRenderer>().color = newColor;
+            Color newColor = playerIcon.color;
+            newColor.a -= 1f * Time.deltaTime;
+            playerIcon.color = newColor;
             yield return null;
         }
+        notCoroutineIcon = true;
     }
 }
