@@ -14,11 +14,14 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] GameObject objectSpawn;
     [SerializeField] GameObject[] shipModelVariants;
     [SerializeField] Image[] victory;
-    
+
+    public Image HealthBar;
+    public Image RepairBar;
+
     public int playerIndex;
-    public int health;
-    public int maxHealth = 100;
-    public int repair;
+    public float health;
+    public float maxHealth = 100f;
+    public float repair;
 
     PlayerAttack playerAttack;
     PlayerAudio playerAudio;
@@ -45,6 +48,7 @@ public class PlayerStats : MonoBehaviour
     {
         UpdateAmmoRemain(playerAttack.currentAmmo);
         health = maxHealth;
+        HealthBar.color = Color.green;
         repair = 0;
         lblHealth.GetComponent<Text>().text = "Life: " + health + "%";
         lblRepair.GetComponent<Text>().text = "Repair: " + repair + "%";
@@ -63,6 +67,11 @@ public class PlayerStats : MonoBehaviour
         else
         {
             playerAudio.damageAudio.Play();
+        }
+        HealthBar.fillAmount = health / maxHealth;
+        if (health < 35f)
+        {
+            HealthBar.color = Color.red;
         }
         lblHealth.GetComponent<Text>().text = "Life: "+health+"%";
     }
@@ -104,6 +113,8 @@ public class PlayerStats : MonoBehaviour
 
         GetComponent<MeshRenderer>().enabled = true;
         GetComponent<CapsuleCollider>().enabled = true;
+        HealthBar.color = Color.green;
+        HealthBar.fillAmount = maxHealth;
     }
 
     public void activeGear(bool active)
@@ -127,8 +138,8 @@ public class PlayerStats : MonoBehaviour
         if (other.gameObject.CompareTag("ShipP"+playerIndex)&&repairObject)
         {
             GetComponent<AudioSource>().Play();
-            repair += 25;                    
-
+            repair += 25;
+            RepairBar.fillAmount = repair / 100f;
             switch (repair)
             {
                 case 50:
