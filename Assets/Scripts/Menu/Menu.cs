@@ -34,7 +34,6 @@ public class Menu : MonoBehaviour
         {
             if (Input.GetButton("Continue"))
             {
-                //Debug.Log(Input.GetButton("Select"));
                 SceneManager.LoadScene(2);
             }
         }
@@ -67,10 +66,8 @@ public class Menu : MonoBehaviour
                     imgMenu.SetActive(false);
                     imgRules.SetActive(true);
                     imgR = true;
-                    //Debug.Log(Input.GetButton("Select"));
                 }
                 ResetAxes(selectAxis);
-                //Debug.Log("Button 0");
             }
             if (button[1].GetComponent<Image>().color == Color.green)
             {
@@ -89,8 +86,7 @@ public class Menu : MonoBehaviour
                 {
                     imgCredits.SetActive(true);
                     credR = true;
-                    //inserire pannello crediti
-                    Debug.Log("Credits");
+                    //Debug.Log("Credits");
                 }
                 ResetAxes(selectAxis);
                 //Debug.Log("Button 1");
