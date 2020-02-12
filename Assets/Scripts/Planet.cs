@@ -11,6 +11,7 @@ public class Planet : MonoBehaviour
     private void Start()
     {
         //StartCoroutine(SpawnEnvObjects());
+        Screen.SetResolution(1920, 1080, true);
         StartCoroutine(SpawnBonusItems());
     }
 

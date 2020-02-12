@@ -21,6 +21,7 @@ public class Menu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Screen.SetResolution(1920, 1080, true);
         button[0].SetActive(true);
         button[1].SetActive(true);
         button[2].SetActive(true);
