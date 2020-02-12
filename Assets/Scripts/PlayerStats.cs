@@ -17,6 +17,8 @@ public class PlayerStats : MonoBehaviour
 
     public Image HealthBar;
     public Image RepairBar;
+    public Sprite spriteGreen;
+    public Sprite spriteRed;
 
     public int playerIndex;
     public float health;
@@ -48,7 +50,7 @@ public class PlayerStats : MonoBehaviour
     {
         UpdateAmmoRemain(playerAttack.currentAmmo);
         health = maxHealth;
-        HealthBar.color = Color.green;
+        HealthBar.sprite = spriteGreen;
         repair = 0;
         lblHealth.GetComponent<Text>().text = "Life: " + health + "%";
         lblRepair.GetComponent<Text>().text = "Repair: " + repair + "%";
@@ -71,7 +73,7 @@ public class PlayerStats : MonoBehaviour
         HealthBar.fillAmount = health / maxHealth;
         if (health < 35f)
         {
-            HealthBar.color = Color.red;
+            HealthBar.sprite = spriteRed;
         }
         lblHealth.GetComponent<Text>().text = "Life: "+health+"%";
     }
@@ -113,7 +115,7 @@ public class PlayerStats : MonoBehaviour
 
         GetComponent<MeshRenderer>().enabled = true;
         GetComponent<CapsuleCollider>().enabled = true;
-        HealthBar.color = Color.green;
+        HealthBar.sprite = spriteGreen;
         HealthBar.fillAmount = maxHealth;
     }
 
