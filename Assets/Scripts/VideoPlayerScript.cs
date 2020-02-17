@@ -10,6 +10,8 @@ public class VideoPlayerScript : MonoBehaviour
     private void Awake()
     {
         videoPlayer = GetComponent<VideoPlayer>();
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
     }
 
     private IEnumerator Start()

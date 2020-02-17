@@ -8,6 +8,7 @@ public class Planet : MonoBehaviour
     [SerializeField] GameObject[] bonusItems = null;
     [SerializeField] float bonusSpawnTime = 1;
 
+
     private void Start()
     {
         //StartCoroutine(SpawnEnvObjects());
