@@ -7,6 +7,10 @@ using UnityEngine.SceneManagement;
 public class Menu : MonoBehaviour
 {
     [SerializeField]
+    GameObject panelMenu;
+    [SerializeField]
+    GameObject panelChose;
+    [SerializeField]
      GameObject[] button;
     [SerializeField]
     GameObject imgMenu;
@@ -14,14 +18,19 @@ public class Menu : MonoBehaviour
     GameObject imgRules;
     [SerializeField]
     GameObject imgCredits;
+    
 
     bool selectAxis = false;
     bool imgR = false;
     bool credR = false;
+    bool pnlMenu = true;
+    bool pnlChosePlayer = false;
+    float chargeTimer = 1;
     // Start is called before the first frame update
     void Start()
     {
         Screen.SetResolution(1920, 1080, true);
+        //panelMenu.SetActive(true);
         button[0].SetActive(true);
         button[1].SetActive(true);
         button[2].SetActive(true);
@@ -31,13 +40,43 @@ public class Menu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (imgR)
+        if (pnlMenu)
+        {
+            panelMenu.SetActive(true);
+            panelChose.SetActive(false);
+            PnlMenu();
+        }
+        
+        if (pnlChosePlayer)
+        {
+            panelMenu.SetActive(false);
+            panelChose.SetActive(true);
+            PnlChosePlayer();
+        }
+        
+    }
+    private void ResetAxes(bool tmp)
+    {
+            if (tmp && (Input.GetAxis("VerticalP1") != 0 && Input.GetAxis("VerticalP2") != 0))
+            {
+            //Debug.Log("Reverse true");
+            selectAxis = true;
+            }
+            if (tmp && (Input.GetAxis("VerticalP1") == 0 && Input.GetAxis("VerticalP2") == 0))
+            {
+            //Debug.Log("Reverse false");
+            selectAxis = false;
+            }
+    }
+    private void PnlMenu()
+    {
+        /*if (imgR)
         {
             if (Input.GetButton("Continue"))
             {
                 SceneManager.LoadScene(2);
             }
-        }
+        }*/
         if (credR)
         {
             if (Input.GetButton("Continue"))
@@ -48,6 +87,7 @@ public class Menu : MonoBehaviour
         }
         else
         {
+            //Debug.Log("menu");
             float tmpP1 = Input.GetAxis("VerticalP1");
             float tmpP2 = Input.GetAxis("VerticalP2");
             if (Input.GetAxis("VerticalP1") != 0 && Input.GetAxis("VerticalP2") != 0)
@@ -65,8 +105,10 @@ public class Menu : MonoBehaviour
                 if (Input.GetButton("Select"))
                 {
                     imgMenu.SetActive(false);
-                    imgRules.SetActive(true);
-                    imgR = true;
+                    pnlMenu = false;
+                    pnlChosePlayer = true;
+                    //imgRules.SetActive(true);
+                    //imgR = true;
                 }
                 ResetAxes(selectAxis);
             }
@@ -109,19 +151,39 @@ public class Menu : MonoBehaviour
                 //Debug.Log("Button 2");
             }
         }
-        
     }
-    private void ResetAxes(bool tmp)
+    private void PnlChosePlayer()
     {
-            if (tmp && (Input.GetAxis("VerticalP1") != 0 && Input.GetAxis("VerticalP2") != 0))
+        button[3].GetComponent<Image>().color = Color.green;
+        
+        if (Input.GetButton("Select"))
+        {
+            chargeTimer += Time.deltaTime;
+        }
+        if (Input.GetButton("Select") && chargeTimer>2)
+        {
+            //Debug.Log("chose");
+            imgRules.SetActive(true);
+            imgR = true;
+        }
+        if (imgR)
+        {
+            if (Input.GetButton("Continue"))
             {
-            //Debug.Log("Reverse true");
-            selectAxis = true;
+                SceneManager.LoadScene(2);
             }
-            if (tmp && (Input.GetAxis("VerticalP1") == 0 && Input.GetAxis("VerticalP2") == 0))
-            {
-            //Debug.Log("Reverse false");
-            selectAxis = false;
-            }
+        }
+        if (Input.GetButton("Continue") && !imgR)
+        {
+            pnlMenu = true;
+            pnlChosePlayer = false;
+            panelChose.SetActive(false);
+            panelMenu.SetActive(true);
+            imgMenu.SetActive(true);
+            chargeTimer = 1;
+        }
+
+        float tmpP1 = Input.GetAxis("VerticalP1");
+        float tmpP2 = Input.GetAxis("VerticalP2");
     }
 }
